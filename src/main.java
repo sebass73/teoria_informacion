@@ -9,34 +9,39 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 
 import java.io.*;
+import java.util.List;
 import java.util.Scanner;
 
 public class main {
     public static void main(String[] args) throws IOException {
 
+
+        InputStream inBTC = main.class.getResourceAsStream("/BTC");
+        InputStream inHTC = main.class.getResourceAsStream("/ETH");
+
         Scanner inputBTC;
-        inputBTC = new Scanner(new File("./BTC"));
+        inputBTC = new Scanner(inBTC);
 
         Scanner inputETH;
-        inputETH = new Scanner(new File("./ETH"));
+        inputETH = new Scanner(inHTC);
 
         Moneda ETH = new Moneda(inputETH);
         Moneda BTC = new Moneda(inputBTC);
 
-        //System.out.println("Matriz de pasaje BTC:");
-        //BTC.calcularMatrizdePasaje();
+        System.out.println("Matriz de pasaje BTC:");
+        BTC.printMatrizdePasaje();
 
-        //System.out.println("Matriz de pasaje ETH:");
-        //ETH.calcularMatrizdePasaje();
+        System.out.println("Matriz de pasaje ETH:");
+        ETH.printMatrizdePasaje();
 
-        //BTC.printAutocorrelacion();
-        //ETH.printAutocorrelacion();
+        BTC.printAutocorrelacion();
+        ETH.printAutocorrelacion();
 
-        //BTC.printCorrelacionCruzada(ETH);
+        BTC.printCorrelacionCruzada(ETH);
 
     }
 }
-        //List<Nodo> distProbabilidad = montecarlo.calcularDistribucionDeProbabilidades(input);
+        //
         /*System.out.println();
         moneda.printMatrizdePasaje();
         System.out.println();

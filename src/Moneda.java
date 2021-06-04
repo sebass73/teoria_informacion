@@ -12,8 +12,9 @@ public class Moneda {
 
     private static final double EPSILON=0.01;
 
-    private double [][] matrizPasajeBTC = new double[3][3];
-    private double [][] matrizPasajeETH = new double[3][3];
+    private double [][] matrizPasaje = new double[3][3];
+
+    private List<Integer> cotizaciones;
 
     public class Nodo {
         int valor;
@@ -29,13 +30,15 @@ public class Moneda {
         this.cotizaciones = calcularCotizaciones(moneda);
     }
 
-    public void printMatrizdePasaje(String moneda) throws FileNotFoundException {
-        for (int i = 0; i < matrizPasajeBTC.length; i++) {
-            for (int j = 0; j < matrizPasajeBTC[i].length; j++) {
-                if (moneda == "BTC")
-                    System.out.print(matrizPasajeBTC[i][j] + " ");
-                if (moneda == "ETH")
-                    System.out.print(matrizPasajeETH[i][j] + " ");
+    public List<Integer> getCotizaciones(){
+        return this.cotizaciones;
+    }
+
+    public void printMatrizdePasaje() throws FileNotFoundException {
+        calcularMatrizdePasaje();
+        for (int i = 0; i < matrizPasaje.length; i++) {
+            for (int j = 0; j < matrizPasaje[i].length; j++) {
+                    System.out.print(matrizPasaje[i][j] + " ");
             }
             System.out.println();
         }
@@ -86,10 +89,7 @@ public class Moneda {
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[i].length; j++) {
                 DecimalFormat df = new DecimalFormat("#.000");
-                if (moneda == "BTC")
-                    matrizPasajeBTC[i][j] = Double.parseDouble(df.format(matriz[i][j]/exitos[j]));
-                if (moneda == "ETH")
-                    matrizPasajeETH[i][j] = Double.parseDouble(df.format(matriz[i][j]/exitos[j]));
+                matrizPasaje[i][j] = Double.parseDouble(df.format(matriz[i][j]/exitos[j]));
             }
         }
     }
@@ -121,20 +121,20 @@ public class Moneda {
             DecimalFormat df = new DecimalFormat("#.000");
             vector[t] = Double.parseDouble(df.format((vector[t] / (emisiones - t))));
         }
-        input.close();
         return vector;
     }
 
-    public double[] correlacionCruzada() throws FileNotFoundException {
+    public double[] correlacionCruzada(Moneda moneda) {
         double [] vector = new double[5];
+        List<Integer> cotizacionesMoneda = moneda.getCotizaciones();
         for(int i=0; i<vector.length;i++)
             vector[i] = 0;
         int emisiones = 0;
         for (int i=0; i<cotizaciones.size(); i++){
             int valor1 = cotizaciones.get(i);
             emisiones++;
-            for(int j=i; j<=i+200 && j<cotizacionesETH.size();j=j+50){
-                int valor2 = cotizacionesETH.get(j);
+            for(int j=i; j<=i+200 && j<cotizacionesMoneda.size();j=j+50){
+                int valor2 = cotizacionesMoneda.get(j);
                 vector[(j-i)/50] = vector[(j-i)/50] + (valor1 * valor2);
             }
         }
@@ -142,16 +142,12 @@ public class Moneda {
             DecimalFormat df = new DecimalFormat("#.000");
             vector[t] = Double.parseDouble(df.format((vector[t] / (emisiones - t))));
         }
-        inputBTC.close();
-        inputETH.close();
         return vector;
     }
 
-    public List<Nodo> calcularDistribucionDeProbabilidades(Scanner input){
+    public List<Nodo> calcularDistribucionDeProbabilidades(){
         //PREPROCESAMIENTO
-        List<Integer> arrayValues = getCotizaciones(input);
-
-        List<Integer> arrayValuesSinRepetidos = arrayValues.stream().distinct().collect(Collectors.toList());
+        List<Integer> arrayValuesSinRepetidos = cotizaciones.stream().distinct().collect(Collectors.toList());
         int arrayLength = arrayValuesSinRepetidos.size();
 
         AtomicInteger n = new AtomicInteger();
@@ -193,16 +189,6 @@ public class Moneda {
             }
         });
         return aciertos;
-    }
-
-    public List<Integer> getCotizaciones(Scanner input) {
-        List<Integer> arrayValues = new ArrayList<>();
-
-        while (input.hasNext()){
-            int valorActual = Integer.parseInt(input.nextLine());
-            arrayValues.add(valorActual);
-        }
-        return arrayValues;
     }
 
     private void sumaExitos(List<Nodo> exitos, Integer value) {
