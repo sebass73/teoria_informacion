@@ -9,6 +9,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,7 +29,7 @@ public class main {
         Moneda ETH = new Moneda(inputETH);
         Moneda BTC = new Moneda(inputBTC);
 
-        System.out.println("Matriz de pasaje BTC:");
+        /*System.out.println("Matriz de pasaje BTC:");
         BTC.printMatrizdePasaje();
 
         System.out.println("Matriz de pasaje ETH:");
@@ -37,7 +38,15 @@ public class main {
         BTC.printAutocorrelacion();
         ETH.printAutocorrelacion();
 
-        BTC.printCorrelacionCruzada(ETH);
+        BTC.printCorrelacionCruzada(ETH);*/
+
+        double[] distBTC = BTC.calcularDistribucionDeProbabilidadDeEstado();
+        double[] distETH = ETH.calcularDistribucionDeProbabilidadDeEstado();
+
+        Canal canal = new Canal(distBTC, distETH);
+
+        //canal.printRuido();
+        //canal.printPerdida();
 
     }
 }
@@ -77,3 +86,4 @@ public class main {
         frame.setVisible(true);
     }
 }*/
+

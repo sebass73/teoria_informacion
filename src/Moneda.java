@@ -16,6 +16,8 @@ public class Moneda {
 
     private List<Integer> cotizaciones;
 
+    DecimalFormat df = new DecimalFormat("#.000");
+
     public class Nodo {
         int valor;
         double acierto;
@@ -139,10 +141,16 @@ public class Moneda {
             }
         }
         for (int t=0; t< vector.length; t++) {
-            DecimalFormat df = new DecimalFormat("#.000");
-            vector[t] = Double.parseDouble(df.format((vector[t] / (emisiones - t))));
+            vector[t] = Double.parseDouble(this.df.format((vector[t] / (emisiones - t))));
         }
         return vector;
+    }
+
+    public void printDistrubucionDeProbabilidad(){
+        List<Nodo> listaDeProbabilidades = this.calcularDistribucionDeProbabilidades();
+        listaDeProbabilidades.stream().forEach(v -> {
+            System.out.println(v.valor + " " + v.acierto);
+        });
     }
 
     public List<Nodo> calcularDistribucionDeProbabilidades(){
@@ -213,4 +221,37 @@ public class Moneda {
         return true;
     }
 
+    public double[] calcularDistribucionDeProbabilidadDeEstado(){
+        /* distribucion[0]=baja,distribucion[1]=matiene,distribucion[2]=sube */
+        double [] distribucion = {0,0,0};
+
+        int valor_anterior;
+        int valor_actual;
+        int exitos=0;
+        int estado = MANTIENE;
+
+        for (int i=1; i<cotizaciones.size()-1;i++){
+            valor_anterior = cotizaciones.get(i-1);
+            valor_actual = cotizaciones.get(i);
+
+            if (valor_actual > valor_anterior) {
+                distribucion[CRECE]++;
+                estado=CRECE;
+            }
+            if (valor_actual == valor_anterior) {
+                distribucion[MANTIENE]++;
+                estado=MANTIENE;
+            }
+            if (valor_actual < valor_anterior) {
+                distribucion[DECRECE]++;
+                estado=DECRECE;
+            }
+            exitos++;
+        }
+
+        for (int i=0; i<distribucion.length; i++){
+            distribucion[i]=Double.parseDouble(this.df.format(distribucion[i]/exitos));
+        }
+        return distribucion;
+    }
 }
