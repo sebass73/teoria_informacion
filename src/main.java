@@ -1,16 +1,4 @@
-/*import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.general.DefaultPieDataset;*/
-
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.general.DefaultPieDataset;
-
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 public class main {
@@ -29,61 +17,73 @@ public class main {
         Moneda ETH = new Moneda(inputETH);
         Moneda BTC = new Moneda(inputBTC);
 
-        /*System.out.println("Matriz de pasaje BTC:");
+        /** Ejercicio 1-a **/
+        System.out.println("Matriz de pasaje BTC:");
         BTC.printMatrizdePasaje();
 
         System.out.println("Matriz de pasaje ETH:");
         ETH.printMatrizdePasaje();
 
+        /** Ejercicio 1-b **/
+        System.out.println("Autocorrelacion BTC: ");
         BTC.printAutocorrelacion();
+        System.out.println("Autocorrelacion ETH: ");
         ETH.printAutocorrelacion();
 
-        BTC.printCorrelacionCruzada(ETH);*/
+        /** Ejercicio 1-c **/
+        BTC.printCorrelacionCruzada(ETH);
 
+        /** Ejercicio 2-a **/
+        Codificacion codificacion_BTC = new Codificacion(BTC.getCotizaciones());
+        Codificacion codificacion_ETH = new Codificacion(ETH.getCotizaciones());
+
+        System.out.println("Distribucion de probabilidad BTC:");
+        codificacion_BTC.printDistProb();
+
+        System.out.println("Distribucion de probabilidad ETH:");
+        codificacion_ETH.printDistProb();
+
+        /** Ejercicio 2-b **/
+        System.out.println("Huffman semi-estático BTC:");
+        codificacion_BTC.printCodificacionHSE();
+        CodificacionBits cb_BTC_HSE = new CodificacionBits();
+        cb_BTC_HSE.writeOutputFile(codificacion_BTC.getCodificacionHSE(), "BTC Huffman Semi-Estatico");
+        //Tamaño original: 6,83 KB (6.998 bytes)
+        //Tamaño comprimido: 1,17 KB (1.199 bytes)
+
+        System.out.println("Huffman semi-estático ETH:");
+        codificacion_ETH.printCodificacionHSE();
+        CodificacionBits cb_ETH_HSE = new CodificacionBits();
+        cb_ETH_HSE.writeOutputFile(codificacion_ETH.getCodificacionHSE(), "ETH Huffman Semi-Estatico");
+        //Tamaño original: 5,39 KB (5.520 bytes)
+        //Tamaño comprimido: 838 bytes (838 bytes)
+
+        /** Ejercicio 2-c **/
+        System.out.println("Codificacion RLC de BTC:");
+        codificacion_BTC.printRLCBinario();
+        CodificacionBits cb_BTC_RLC = new CodificacionBits();
+        cb_BTC_RLC.writeOutputFile(codificacion_BTC.getCodificacionRLC(), " BTC RLC");
+        //Tamaño comprimido: 2,84 KB (2.916 bytes)
+
+        System.out.println("Codificacion RLC de ETH:");
+        codificacion_ETH.printRLCBinario();
+        CodificacionBits cb_ETH_RLC = new CodificacionBits();
+        cb_ETH_RLC.writeOutputFile(codificacion_ETH.getCodificacionRLC(), " ETH RLC");
+        //Tamaño comprimido: 444 bytes (444 bytes)
+
+        //ETH se comprime mucho mas con RLC
+
+        /** Ejercicio 3-a **/
         double[] distBTC = BTC.calcularDistribucionDeProbabilidadDeEstado();
         double[] distETH = ETH.calcularDistribucionDeProbabilidadDeEstado();
 
         Canal canal = new Canal(distBTC, distETH);
 
-        //canal.printRuido();
-        //canal.printPerdida();
+        /** Ejercicio 3-b **/
+
+        canal.printRuido();
+        canal.printPerdida();
 
     }
 }
-        //
-        /*System.out.println();
-        moneda.printMatrizdePasaje();
-        System.out.println();
-
-
-        double[] acETH = moneda.autocorrelacion("ETH");
-        System.out.println("Autocorrelacion ETH: ");
-        for (int i=0; i< acETH.length; i++)
-            System.out.println(i+": "+acETH[i]);
-        System.out.println();
-
-        double[] cc = moneda.correlacionCruzada();
-        System.out.println("Correlacion Cruzada: ");
-        for (int i=0; i< cc.length; i++)
-            System.out.println((i*50)+": "+cc[i]);
-        System.out.println();
-
-        DefaultPieDataset data = new DefaultPieDataset();
-        data.setValue("C", 40);
-        data.setValue("Java", 45);
-        data.setValue("Python", 15);
-        // Creando el Grafico
-        JFreeChart chart = ChartFactory.createPieChart(
-                "Ejemplo Rapido de Grafico en un ChartFrame",
-                data,
-                true,
-                true,
-                false);
-
-        // Mostrar Grafico
-        ChartFrame frame = new ChartFrame("JFreeChart", chart);
-        frame.pack();
-        frame.setVisible(true);
-    }
-}*/
 

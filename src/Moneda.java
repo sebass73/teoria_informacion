@@ -48,7 +48,6 @@ public class Moneda {
 
     public void printAutocorrelacion() {
         double[] ac = autocorrelacion();
-        System.out.println("Autocorrelacion BTC: ");
         for (int i=0; i< ac.length; i++)
             System.out.println(i+": "+ac[i]);
         System.out.println();
